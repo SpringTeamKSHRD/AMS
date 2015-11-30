@@ -13,14 +13,13 @@ import com.ams.app.services.UserService;
 
 
 public class UserDao implements UserService {
-
-
 	private DataSource dataSource;
 	private Connection con;
+	
 	public UserDao(DataSource dataSource2) {
 		this.dataSource = dataSource2;
 	}
-
+	
 	@Override
 	public ArrayList<UserDto> list(int limitrow, int page) {
 		if(page<=0) page=1;
@@ -28,7 +27,7 @@ public class UserDao implements UserService {
 		UserDto user = null;
 		try {
 			con = dataSource.getConnection();
-			String sql = "SELECT * FROM tbuser where enable = true ORDER BY id LIMIT ? OFFSET ?";
+			String sql = "SELECT * FROM tbuser ORDER BY id LIMIT ? OFFSET ?"; //where enable = true
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setInt(1, limitrow);
 			ps.setInt(2, offset);
@@ -141,7 +140,7 @@ public class UserDao implements UserService {
 	public UserDto getUser(int id) {
 		try {
 			con = dataSource.getConnection();
-			String sql = "SELECT * FROM tbuser WHERE id=? and enable = true Limit 1";
+			String sql = "SELECT * FROM tbuser WHERE id=? Limit 1"; //and enable = true 
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
@@ -218,11 +217,13 @@ public class UserDao implements UserService {
 		int total_page;
 		try {
 			con = dataSource.getConnection();
-			String sql = "SELECT * FROM tbuser where enable = true";
+			String sql = "SELECT COUNT(id) FROM tbuser"; //where enable = true
 			PreparedStatement ps = con.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			total_page = rs.getInt(1) / limit;
+			if(rs.getInt(1)%limit!=0) total_page+=1;
+			System.out.println("total page "+total_page);
 			rs.close();
 			return total_page;
 		} catch (SQLException e) {
@@ -350,5 +351,7 @@ public class UserDao implements UserService {
 		}
 		return false;
 	}
+
+	
 
 }

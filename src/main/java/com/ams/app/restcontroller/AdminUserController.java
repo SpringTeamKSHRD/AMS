@@ -42,12 +42,13 @@ public class AdminUserController {
 	public ResponseEntity<Map<String, Object>> listUser(@PathVariable Map<String, String> pathVariables) {
 		System.out.println("list user controller.");
 		ArrayList<UserDto> users = null;
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-		if (pathVariables.containsKey("limit") && pathVariables.containsKey("page")) {
-			users = userService.list(Integer.parseInt(pathVariables.get("limit")),
-					Integer.parseInt(pathVariables.get("page")));
+		if (pathVariables.containsKey("limit") && pathVariables.containsKey("page")) {	
+			users = userService.list(Integer.parseInt(pathVariables.get("limit")),Integer.parseInt(pathVariables.get("page")));
 		} else if (pathVariables.containsKey("limit")) {
 			users = userService.list(Integer.parseInt(pathVariables.get("limit")), 0);
+			map.put("TOTAL_PAGE",userService.getTotalPage(Integer.parseInt(pathVariables.get("limit"))));
 		}
 		if (users.isEmpty()) {
 			map.put("MESSAGE", "USERS ARE NOT FOUND.");

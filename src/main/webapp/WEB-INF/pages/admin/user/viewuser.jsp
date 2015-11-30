@@ -92,7 +92,21 @@
 				<div class="row col-sm-12 center-block card">
 					<h3>Users Information</h3>
 					<hr>
+					<div>
+			   			<select class="form-control" name="selector" onchange="selectChange()" style="width:200px;">
+						  <option value="5">5</option>
+						  <option value="10">10</option>
+						  <option value="25">25</option>
+						  <option value="50">50</option>
+						  <option value="100">100</option>
+					   </select>
+				   </div><br/>
+				   
 					<div id="show"></div>
+					<!-- pagination -->
+					<div id="content"></div>
+		   			<div id="page-selection"></div>
+		
 				</div>
 			</div>
 		</div>
@@ -114,6 +128,7 @@
 					<div id="showdetail" class="modal-body">
 						<!-- Some text in the modal. -->
 					</div>
+					
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -122,10 +137,7 @@
 		</div>
 	</div>
 	
-	<!-- pagination -->
-	<!-- <div id="content">Dynamic Content goes here</div>
-    <div id="page-selection">Pagination goes here</div> -->
-
+	
 
 	<!-- Javascript Library -->
 	<script type="text/javascript"

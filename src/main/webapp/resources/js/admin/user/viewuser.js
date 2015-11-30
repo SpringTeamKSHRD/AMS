@@ -1,22 +1,70 @@
+var limit=5;
+var cur_page;
+var total_pages=10;
+
 startPage();
+
 function startPage() {
 	//alert("start page");
-	$
-			.ajax({
-				type : "GET",
-				url : domainname + "api/admin/user/list/" + 10,
-				dataType : 'json',
-				data : null,
-				success : function(data) {
-					//alert("Success :" + data.MESSAGE);
-					displayData(data);
-				},
-				error : function(data) {
-					alert("Unsuccess: " + data.MESSAGE);
-					console.log("ERROR..." + data);
-				}
-			});
+	listData();
+	$('#page-selection').bootpag({
+	    total: total_pages,
+	    //page: 1,
+	    maxVisible: 5,
+	    leaps: true,
+	    firstLastUse: true,
+	    first: 'First',
+	    last: 'Last',
+	    wrapClass: 'pagination',
+	    activeClass: 'active',
+	    disabledClass: 'disabled',
+	    nextClass: 'next',
+	    prevClass: 'prev',
+	    lastClass: 'last',
+	    firstClass: 'first'
+	}).on("page", function(event, num){
+		pagination(num);
+	}); 
+}
 
+//pagination
+function pagination(num_page){
+	$.ajax({
+		type : "GET",
+		url : domainname + "api/admin/user/list/" + limit+"/"+num_page,
+		dataType : 'json',
+		data : null,
+		success : function(data) {
+			displayData(data);
+		},
+		error : function(data) {
+			alert("Unsuccess: " + data.STATUS);
+			console.log("ERROR..." + data);
+		}
+	});
+}
+
+function selectChange(){
+	limit=$('select[name=selector]').val();
+	startPage();
+}
+
+function listData(){
+	$.ajax({
+		type : "GET",
+		url : domainname + "api/admin/user/list/" + limit,
+		dataType : 'json',
+		data : null,
+		success : function(data) {
+			//alert(data.TOTAL_PAGE);
+			total_pages=data.TOTAL_PAGE;
+			displayData(data);
+		},
+		error : function(data) {
+			alert("Unsuccess: " + data.STATUS);
+			console.log("ERROR..." + data);
+		}
+	});
 }
 
 function displayData(data) {
@@ -73,8 +121,7 @@ function detailuser(id) {
 		type : "GET",
 		url : domainname + "api/admin/user/" + id,
 		success : function(data) {
-			//alert("Success detail:" + data.MESSAGE);
-			//alert(data.RESPONSE_DATA.name);
+			alert("Success detail:" + data.STATUS);
 			$("#image").attr(
 					"src",
 					domainname + "/resources/upload/profile/"
@@ -91,7 +138,7 @@ function detailuser(id) {
 			$("#showdetail").html(str);
 		},
 		error : function(data) {
-			alert("Unsuccess:" + data.MESSAGE);
+			alert("Unsuccess:" + data.STATUS);
 			console.log("ERROR..." + data);
 		}
 	});
@@ -108,11 +155,11 @@ function deleteuser(id) {
 		type : "DELETE",
 		url : domainname + "api/admin/user/" + id,
 		success : function(data) {
-			alert("Success: " + data.MESSAGE);
+			alert("Success: " + data.STATUS);
 			startPage();
 		},
 		error : function(data) {
-			alert("Unsuccess:" + data.MESSAGE);
+			alert("Unsuccess:" + data.STATUS);
 			console.log("ERROR..." + data);
 		}
 	});
@@ -124,42 +171,12 @@ function changeStatus(id){
 		type : "DELETE",
 		url : domainname + "api/admin/user/" + id,
 		success : function(data) {
-			alert("Success: " + data.MESSAGE);
+			alert("Success: " + data.STATUS);
 			startPage();
 		},
 		error : function(data) {
-			alert("Unsuccess:" + data.MESSAGE);
+			alert("Unsuccess:" + data.STATUS);
 			console.log("ERROR..." + data);
 		}
-	});
-	 
+	}); 
 }
-//pagination
-/*var limit;
-var cur_page;
-var total_pages;
-
-function pagination(){
-	
-}*/
-/*$('#page-selection').bootpag({
-    total: 50,
-    page: 2,
-    maxVisible: 5,
-    leaps: true,
-    firstLastUse: true,
-    first: 'First',
-    last: 'Last',
-    wrapClass: 'pagination',
-    activeClass: 'active',
-    disabledClass: 'disabled',
-    nextClass: 'next',
-    prevClass: 'prev',
-    lastClass: 'last',
-    firstClass: 'first'
-}).on("page", function(event, num){
-    //$(".content4").html("Page " + num); // or some ajax content loading...
-}); 
-
-
-*/
